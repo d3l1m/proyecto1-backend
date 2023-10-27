@@ -38,7 +38,6 @@ db.once("open", async () => {
   const restauranteSchema = new mongoose.Schema({
     nombre: String,
     categoria: String,
-    popularidad: Number
     popularidad: Number,
     habilitado: {
       type: Boolean,
