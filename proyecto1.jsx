@@ -208,7 +208,7 @@ app.patch('/usuarios/:id/deshabilitar', async (req, res) => {
     
         if (categoria) {
           
-          query.categoria = { $regex: new RegExp(`.*${categoria}.*`, 'i') };;
+          query.categoria = { $regex: new RegExp(`.*${categoria}.*`, 'i') };
         }
     
         if (nombre) {
