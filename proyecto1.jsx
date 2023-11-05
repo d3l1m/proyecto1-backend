@@ -201,31 +201,35 @@ app.patch('/usuarios/:id/deshabilitar', async (req, res) => {
   
   // CRUD Restaurante
     // READ retorna restaurantes que pertenezcan a la categoría proveída y/o su nombre se asemeje a la búsqueda.
-app.get('/restaurantes/busqueda', async (req, res) => {
-  try {
-    const { categoria, nombre } = req.query;
-    let query = {};
-
-    if (categoria) {
-      query.categoria = categoria;
-    }
-
-    if (nombre) {
-      query.nombre = { $regex: new RegExp(nombre, 'i') };
-    }
-
-    const restaurantes = await Restaurante.find(query);
-
-    if (restaurantes.length === 0) {
-      return res.status(404).json({ message: 'No se encontraron restaurantes que coincidan con los criterios de búsqueda.' });
-    }
-
-    return res.json(restaurantes);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Error al buscar restaurantes.' });
-  }
-});
+    app.get('/restaurantes/busqueda', async (req, res) => {
+      try {
+        const { categoria, nombre } = req.query;
+        let query = {};
+    
+        if (categoria) {
+          
+          query.categoria = { $regex: new RegExp(`.*${categoria}.*`, 'i') };;
+        }
+    
+        if (nombre) {
+          // Detecta nombres que contengan la palabra, sea mayuscula o minúscula.
+          query.nombre = { $regex: new RegExp(`.*${nombre}.*`, 'i') };
+        }
+    
+        const restaurantes = await Restaurante.find(query);
+    
+        if (restaurantes.length === 0) {
+          return res.status(404).json({ message: 'No se encontraron restaurantes que coincidan con los criterios de búsqueda.' });
+        }
+    
+        return res.json(restaurantes);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Error al buscar restaurantes.' });
+      }
+    });
+    
+    
   // READ retorna los datos del restaurante que corresponde a la id proveída.
   app.get('/restaurantes/:id', async (req, res) => {
     const id = req.params.id;
